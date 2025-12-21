@@ -205,3 +205,39 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+
+
+
+
+# ==========================================
+#  OWASP CHATBOT PROJESİNE ÖZEL EKLEMELER
+# ==========================================
+
+# --- 1. Büyük Model Dosyaları (BUNLARI YÜKLEME!) ---
+# Bu dosyalar GB'larca yer tutar, GitHub kabul etmez.
+*.bin
+*.pt
+*.pth
+*.safetensors
+*.onnx
+/lora_model/
+/unsloth_model/
+/model_checkpoints/
+/models/
+
+# --- 2. Vektör Veritabanı ---
+# ChromaDB klasörü büyüktür ve yereldir.
+/chroma_db/
+chroma.sqlite3
+
+# --- 3. Colab ve Tünel Dosyaları ---
+cloudflared
+cloudflared.exe
+streamlit.log
+
+# --- 4. Hassas Token ve Anahtarlar ---
+# Hugging Face veya API anahtarların gitmesin
+hf_token
+.api_keys
+client_secrets.json
