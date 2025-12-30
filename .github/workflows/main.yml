@@ -1,9 +1,34 @@
-- name: Install dependencies
+name: Build
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  sonarqube:
+    name: SonarQube Cloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # SonarQube için bu önemlidir
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10' 
+
+      - name: Install Dependencies
         run: |
           pip install pytest pytest-cov
-          # Diğer gereksinimlerin (requirements.txt vb.)
+          # Eğer requirements.txt dosyan varsa onu da kur:
+          # pip install -r requirements.txt 
+          # (Senin mock yaptığın kütüphaneler olduğu için gerekmeyebilir ama varsa ekle)
 
-      - name: Run Tests and Generate Report
+      - name: Run Tests and Generate Coverage Report
+        # BURASI ÖNEMLİ: Coverage raporunu scanner çalışmadan ÖNCE üretiyoruz
         run: |
           pytest --cov=owasp_chatbot --cov-report=xml test_owasp_chatbot.py
 
@@ -11,8 +36,8 @@
         uses: SonarSource/sonarqube-scan-action@v4
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        # Eğer properties dosyan yoksa argümanı buraya da ekleyebilirsin:
-        # with:
-        #   args: >
-        #     -Dsonar.python.coverage.reportPaths=coverage.xml
+          # Properties dosyası kullanıyorsan aşağıdaki args kısmına gerek yok.
+          # Dosya yoksa burayı açabilirsin:
+          # with:
+          #   args: >
+          #     -Dsonar.python.coverage.reportPaths=coverage.xml
