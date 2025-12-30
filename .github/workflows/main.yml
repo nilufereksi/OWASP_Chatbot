@@ -1,0 +1,18 @@
+- name: Install dependencies
+        run: |
+          pip install pytest pytest-cov
+          # Diğer gereksinimlerin (requirements.txt vb.)
+
+      - name: Run Tests and Generate Report
+        run: |
+          pytest --cov=owasp_chatbot --cov-report=xml test_owasp_chatbot.py
+
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        # Eğer properties dosyan yoksa argümanı buraya da ekleyebilirsin:
+        # with:
+        #   args: >
+        #     -Dsonar.python.coverage.reportPaths=coverage.xml
