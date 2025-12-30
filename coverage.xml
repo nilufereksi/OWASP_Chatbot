@@ -1,0 +1,5 @@
+# Önce kütüphaneyi kur (Eğer kurulu değilse)
+pip install pytest pytest-cov
+
+# Sonra raporu üret (Dosya ismin owasp_chatbot olduğu için burası değişti)
+pytest --cov=owasp_chatbot --cov-report=xml test_owasp_chatbot.py
