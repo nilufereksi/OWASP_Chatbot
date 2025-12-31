@@ -1,43 +1,27 @@
 name: Build
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types: [opened, synchronize, reopened]
-
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
 jobs:
-  sonarqube:
-    name: SonarQube Cloud
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # SonarQube için bu önemlidir
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10' 
-
-      - name: Install Dependencies
-        run: |
-          pip install pytest pytest-cov
-          # Eğer requirements.txt dosyan varsa onu da kur:
-          # pip install -r requirements.txt 
-          # (Senin mock yaptığın kütüphaneler olduğu için gerekmeyebilir ama varsa ekle)
-
-      - name: Run Tests and Generate Coverage Report
-        # BURASI ÖNEMLİ: Coverage raporunu scanner çalışmadan ÖNCE üretiyoruz
-        run: |
-          pytest --cov=owasp_chatbot --cov-report=xml test_owasp_chatbot.py
-
-      - name: SonarQube Scan
-        uses: SonarSource/sonarqube-scan-action@v4
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          # Properties dosyası kullanıyorsan aşağıdaki args kısmına gerek yok.
-          # Dosya yoksa burayı açabilirsin:
-          # with:
-          #   args: >
-          #     -Dsonar.python.coverage.reportPaths=coverage.xml
+  sonarqube:
+    name: SonarQube Cloud
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install tox and any other packages
+        run: pip install tox
+      - name: Run tox
+        run: tox -e py
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v7
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
