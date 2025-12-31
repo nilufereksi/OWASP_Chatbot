@@ -38,8 +38,8 @@ jobs:
         with:
           # Eğer sonar-project.properties dosyası kullanmıyorsan ayarları buraya yaz:
           args: >
-            -Dsonar.projectKey=BURAYA_PROJE_KEYINI_YAZ
-            -Dsonar.organization=BURAYA_ORGANIZASYON_ADINI_YAZ
+            -Dsonar.projectKey=owasp-guvenlik-chatbot
+            -Dsonar.organization=nilufereksi
             -Dsonar.python.coverage.reportPaths=coverage.xml
 
 
