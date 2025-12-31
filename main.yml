@@ -1,0 +1,38 @@
+name: Kolay Sonar Tarama
+on: [push]
+
+jobs:
+  sonar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
+
+      - name: Testleri Çalıştır (Rapor Üret)
+        run: |
+          pip install pytest pytest-cov
+          # Buradaki 'owasp_chatbot' yerine kendi python dosya adını,
+          # 'test_owasp_chatbot.py' yerine test dosya adını yaz.
+          pytest --cov=owasp_chatbot --cov-report=xml test_owasp_chatbot.py
+
+      - name: Sonar Tarama
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          # BURASI ÖNEMLİ: Properties dosyası yerine ayarları buraya yazıyoruz.
+          # SonarQube sayfasındaki 'Project Information'dan aldığın Key ve Org'u buraya yapıştır.
+          args: >
+            -Dsonar.projectKey=owasp-guvenlik-chatbot
+            -Dsonar.organization=nilufereksi
+            -Dsonar.python.coverage.reportPaths=coverage.xml
+
+
+
+
+
+
+
+
+
+
